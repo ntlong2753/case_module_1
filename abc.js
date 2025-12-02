@@ -7,10 +7,11 @@ let gameBoard = {
 };
 
 let ball = {
-    x: Math.random() * (gameBoard.width - 20) + 10,
-    y: 10,
+    x: Math.random() * (gameBoard.width - 20) + 10, // vị trí ngang ngẫu nhiên
+    y: 10,                                          // điểm cao nhất
     radius: 10,
     angle: (Math.random() * Math.PI) / 2 + Math.PI / 4,
+    // góc ngẫu nhiên từ 45° đến 135° (bay chéo xuống)
     speed: 4,
     dx: 0,
     dy: 0,
@@ -81,54 +82,33 @@ function checkCollision() {
         ball.x >= bar.x &&
         ball.x <= bar.x + bar.width
     ) {
-        ball.y = bar.y - ball.radius;
+        ball.y = bar.y - ball.radius; // đặt bóng ngay trên bệ
         ball.bounceVertical();
 
         if (keys['ArrowLeft']) ball.angle -= 0.1;
         if (keys['ArrowRight']) ball.angle += 0.1;
         ball.updateDirection();
 
-        score++;
+        score++; // tăng điểm khi đỡ bóng
     }
 }
 
-// Vẽ bóng với màu thay đổi theo điểm
 function drawBall() {
-    let gradient = ctx.createRadialGradient(ball.x, ball.y, 2, ball.x, ball.y, ball.radius);
-    gradient.addColorStop(0, "white");
-    gradient.addColorStop(1, score % 2 === 0 ? "orange" : "purple");
-
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = 'black';
     ctx.fill();
     ctx.closePath();
 }
 
-// Vẽ bệ đỡ với gradient
 function drawBar() {
-    let gradient = ctx.createLinearGradient(bar.x, bar.y, bar.x + bar.width, bar.y);
-    gradient.addColorStop(0, "blue");
-    gradient.addColorStop(1, "cyan");
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = 'blue';
     ctx.fillRect(bar.x, bar.y, bar.width, bar.height);
 }
 
-// Vẽ nền rực rỡ
-function drawBackground() {
-    let gradient = ctx.createLinearGradient(0, 0, 0, gameBoard.height);
-    gradient.addColorStop(0, "#ffcccc");
-    gradient.addColorStop(0.5, "#ccffcc");
-    gradient.addColorStop(1, "#ccccff");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, gameBoard.width, gameBoard.height);
-}
-
-// Vẽ điểm với màu cầu vồng
 function drawScore() {
-    let colors = ["red", "orange", "yellow", "green", "blue", "purple"];
-    ctx.fillStyle = colors[score % colors.length];
-    ctx.font = 'bold 18px Arial';
+    ctx.fillStyle = 'red';
+    ctx.font = '16px Arial';
     ctx.fillText("Score: " + score, 10, 20);
 }
 
@@ -144,7 +124,7 @@ function endGame() {
 }
 
 function update() {
-    drawBackground();
+    ctx.clearRect(0, 0, gameBoard.width, gameBoard.height);
 
     ball.move();
     updateBar();
