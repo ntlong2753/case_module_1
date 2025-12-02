@@ -7,10 +7,11 @@ let gameBoard = {
 };
 
 let ball = {
-    x: gameBoard.width / 2,
-    y: gameBoard.height / 2,
+    x: Math.random() * (gameBoard.width - 20) + 10, // vị trí ngang ngẫu nhiên
+    y: 10,                                          // điểm cao nhất
     radius: 10,
-    angle: Math.PI / 4,
+    angle: (Math.random() * Math.PI) / 2 + Math.PI / 4,
+    // góc ngẫu nhiên từ 45° đến 135° (bay chéo xuống)
     speed: 4,
     dx: 0,
     dy: 0,
@@ -81,11 +82,14 @@ function checkCollision() {
         ball.x >= bar.x &&
         ball.x <= bar.x + bar.width
     ) {
+        ball.y = bar.y - ball.radius; // đặt bóng ngay trên bệ
         ball.bounceVertical();
+
         if (keys['ArrowLeft']) ball.angle -= 0.1;
         if (keys['ArrowRight']) ball.angle += 0.1;
         ball.updateDirection();
-        score++; // Tăng điểm khi đỡ bóng
+
+        score++; // tăng điểm khi đỡ bóng
     }
 }
 
@@ -133,5 +137,8 @@ function update() {
     animationId = requestAnimationFrame(update);
 }
 
-ball.updateDirection();
-update();
+// Delay 1 giây trước khi bắt đầu
+setTimeout(function() {
+    ball.updateDirection();
+    update();
+}, 1000);
